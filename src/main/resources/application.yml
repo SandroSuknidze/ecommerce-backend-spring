@@ -8,7 +8,7 @@ spring:
     name: ecommerce-backend-spring
 
   datasource:
-    url: jdbc:mysql://localhost:3306/ecommerce-backend-spring
+    url: jdbc:mysql://localhost:3306/ecommerce_backend_spring
     username: root
     password: ""
     driver-class-name: com.mysql.cj.jdbc.Driver
