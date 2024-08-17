@@ -44,7 +44,7 @@ public class UserService implements UserDetailsService {
     public String login(User user) {
         User userFromDb = userRepository.findByEmail(user.getEmail());
         if (bCryptPasswordEncoder.matches(user.getPassword(), userFromDb.getPassword())) {
-            return jwtService.createToken();
+            return jwtService.createToken(user.getEmail());
         }
         return "Invalid credentials";
     }
