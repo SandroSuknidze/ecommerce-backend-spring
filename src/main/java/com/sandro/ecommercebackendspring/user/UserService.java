@@ -1,6 +1,7 @@
 package com.sandro.ecommercebackendspring.user;
 
 import com.sandro.ecommercebackendspring.jwt.JWTService;
+import com.sandro.ecommercebackendspring.validator.ObjectValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,10 +18,13 @@ public class UserService implements UserDetailsService {
 
     private final JWTService jwtService;
 
+    private final ObjectValidator objectValidator;
+
     @Autowired
-    public UserService(UserRepository userRepository, JWTService jwtService) {
+    public UserService(UserRepository userRepository, JWTService jwtService, ObjectValidator objectValidator) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
+        this.objectValidator = objectValidator;
     }
 
     @Override
@@ -37,9 +41,29 @@ public class UserService implements UserDetailsService {
     }
 
     public Object createUser(User user) {
+
+        String validationError = validateUser(user);
+
+        if (validationError != null) {
+            return validationError;
+        }
+
+        if (userRepository.findByEmail(user.getEmail()) != null) {
+            return "User already exists";
+        }
+
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
+
+    private String validateUser(User user) {
+        var violations = objectValidator.validate(user);
+        if (!violations.isEmpty()) {
+            return violations.toString();
+        }
+        return null;
+    }
+
 
     public String login(User user) {
         User userFromDb = userRepository.findByEmail(user.getEmail());

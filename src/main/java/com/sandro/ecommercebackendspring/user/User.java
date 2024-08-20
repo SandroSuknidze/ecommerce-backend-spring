@@ -1,6 +1,7 @@
 package com.sandro.ecommercebackendspring.user;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,11 +14,17 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotEmpty(message = "First name is required")
     private String first_name;
+    @NotEmpty(message = "Last name is required")
     private String last_name;
 
     @Column(unique = true)
+    @Email(message = "Email should be valid")
+    @NotEmpty(message = "Email is required")
     private String email;
 
+    @NotEmpty(message = "Password is required")
+    @Min(value = 8, message = "Password should be at least 8 characters")
     private String password;
 }
