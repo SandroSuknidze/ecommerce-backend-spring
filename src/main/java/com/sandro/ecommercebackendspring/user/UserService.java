@@ -2,6 +2,7 @@ package com.sandro.ecommercebackendspring.user;
 
 import com.sandro.ecommercebackendspring.jwt.JWTService;
 import com.sandro.ecommercebackendspring.validator.ObjectValidator;
+import jakarta.activation.spi.MailcapRegistryProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -9,12 +10,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+
 @Service
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
+    private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(10);
 
     private final JWTService jwtService;
 
@@ -40,28 +44,40 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll();
     }
 
-    public Object createUser(User user) {
+    public Map<String, Map<String, List<String>>> createUser(User user) {
 
-        String validationError = validateUser(user);
+        Map<String, Map<String, List<String>>> validationErrors = validateUser(user);
 
-        if (validationError != null) {
-            return validationError;
+        if (validationErrors != null && !validationErrors.isEmpty()) {
+            return validationErrors;
         }
 
-        if (userRepository.findByEmail(user.getEmail()) != null) {
-            return "User already exists";
-        }
-
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        return null;
     }
 
-    private String validateUser(User user) {
+    private Map<String, Map<String, List<String>>> validateUser(User user) {
         var violations = objectValidator.validate(user);
         if (!violations.isEmpty()) {
-            return violations.toString();
+            return violations;
         }
         return null;
+    }
+
+    public Object checkUserExists(User user) {
+        if (userRepository.findByEmail(user.getEmail()) != null) {
+            return Map.of(
+                    "errors", Map.of(
+                            "email", List.of("User with this email already exists.")
+                    )
+            );
+        }
+        return null;
+    }
+
+    public Map<String, String> registerUser(User user) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+        return Map.of("access_token", jwtService.createToken(user.getEmail()));
     }
 
 
