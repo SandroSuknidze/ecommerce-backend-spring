@@ -2,7 +2,6 @@ package com.sandro.ecommercebackendspring.user;
 
 import com.sandro.ecommercebackendspring.jwt.JWTService;
 import com.sandro.ecommercebackendspring.validator.ObjectValidator;
-import jakarta.activation.spi.MailcapRegistryProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

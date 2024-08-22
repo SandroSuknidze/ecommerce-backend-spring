@@ -1,6 +1,5 @@
 package com.sandro.ecommercebackendspring.user;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
