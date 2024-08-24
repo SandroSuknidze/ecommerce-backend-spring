@@ -1,6 +1,10 @@
 package com.sandro.ecommercebackendspring.user;
 
 import com.sandro.ecommercebackendspring.jwt.JWTService;
+import com.sandro.ecommercebackendspring.user.dto.LoginRequest;
+import com.sandro.ecommercebackendspring.user.dto.UserDTO;
+import com.sandro.ecommercebackendspring.user.model.User;
+import com.sandro.ecommercebackendspring.user.model.UserPrincipal;
 import com.sandro.ecommercebackendspring.validator.ObjectValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -40,9 +44,6 @@ public class UserService implements UserDetailsService {
         return new UserPrincipal(user);
     }
 
-    public Object getUsers() {
-        return userRepository.findAll();
-    }
 
     public Map<String, Map<String, List<String>>> createUser(User user) {
 
@@ -108,7 +109,6 @@ public class UserService implements UserDetailsService {
         return new UserDTO(user.getId(), user.getFirst_name(), user.getLast_name(), user.getEmail());
     }
 
-
     public Object login(LoginRequest loginRequest) {
         String accessToken = jwtService.createToken(loginRequest.getEmail());
 
@@ -117,4 +117,14 @@ public class UserService implements UserDetailsService {
                 "user", toUserDTO(loginRequest)
         );
     }
+
+
+    public Object processForgotPassword(String email) {
+
+
+        return null;
+    }
+
+
+
 }

@@ -1,5 +1,7 @@
 package com.sandro.ecommercebackendspring.user;
 
+import com.sandro.ecommercebackendspring.user.dto.LoginRequest;
+import com.sandro.ecommercebackendspring.user.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,9 +48,12 @@ public class UserController {
         return userService.login(loginRequest);
     }
 
-    @GetMapping("/users")
-    public Object getUsers() {
-        return userService.getUsers();
+    @PostMapping("/forgot-password")
+    public Object forgotPassword(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        return userService.processForgotPassword(email);
+
+
     }
 
 }

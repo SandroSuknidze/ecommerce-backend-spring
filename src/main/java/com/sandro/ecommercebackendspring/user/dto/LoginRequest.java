@@ -1,4 +1,4 @@
-package com.sandro.ecommercebackendspring.user;
+package com.sandro.ecommercebackendspring.user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

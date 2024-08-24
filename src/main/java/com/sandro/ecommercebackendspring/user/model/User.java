@@ -1,4 +1,4 @@
-package com.sandro.ecommercebackendspring.user;
+package com.sandro.ecommercebackendspring.user.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;

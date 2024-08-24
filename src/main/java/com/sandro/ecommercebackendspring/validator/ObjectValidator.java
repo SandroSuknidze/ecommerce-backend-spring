@@ -1,6 +1,6 @@
 package com.sandro.ecommercebackendspring.validator;
 
-import com.sandro.ecommercebackendspring.user.User;
+import com.sandro.ecommercebackendspring.user.model.User;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
