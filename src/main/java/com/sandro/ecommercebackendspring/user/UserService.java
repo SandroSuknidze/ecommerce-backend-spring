@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -79,12 +80,41 @@ public class UserService implements UserDetailsService {
         return Map.of("access_token", jwtService.createToken(user.getEmail()));
     }
 
+    public List<String> validateLogin(LoginRequest loginRequest) {
+        Logger logger = Logger.getLogger(UserService.class.getName());
+        List<String> errors = new java.util.ArrayList<>(List.of());
+        try {
+            User userFromDb = userRepository.findByEmail(loginRequest.getEmail());
 
-    public String login(User user) {
-        User userFromDb = userRepository.findByEmail(user.getEmail());
-        if (bCryptPasswordEncoder.matches(user.getPassword(), userFromDb.getPassword())) {
-            return jwtService.createToken(user.getEmail());
+            if (userFromDb == null) {
+                errors.add("The provided credentials are incorrect.");
+                return errors;
+            }
+
+            if (!bCryptPasswordEncoder.matches(loginRequest.getPassword(), userFromDb.getPassword())) {
+                errors.add("The provided credentials are incorrect.");
+                return errors;
+            }
+        } catch (Exception e) {
+            logger.severe("Cannot set user authentication: " + e.getMessage());
+            errors.add("The provided credentials are incorrect.");
+            return errors;
         }
-        return "Invalid credentials";
+        return errors;
+    }
+
+    public UserDTO toUserDTO(LoginRequest loginRequest) {
+        User user = userRepository.findByEmail(loginRequest.getEmail());
+        return new UserDTO(user.getId(), user.getFirst_name(), user.getLast_name(), user.getEmail());
+    }
+
+
+    public Object login(LoginRequest loginRequest) {
+        String accessToken = jwtService.createToken(loginRequest.getEmail());
+
+        return Map.of(
+                "access_token", accessToken,
+                "user", toUserDTO(loginRequest)
+        );
     }
 }

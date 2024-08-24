@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
@@ -35,8 +36,14 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody User user) {
-        return userService.login(user);
+    public Object login(@RequestBody LoginRequest loginRequest) {
+        List<String> errors = userService.validateLogin(loginRequest);
+        if (!errors.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(errors);
+        }
+
+        return userService.login(loginRequest);
     }
 
     @GetMapping("/users")
