@@ -1,23 +1,29 @@
-package com.sandro.ecommercebackendspring.user;
+package com.sandro.ecommercebackendspring.user.service;
 
 import com.sandro.ecommercebackendspring.jwt.JWTService;
 import com.sandro.ecommercebackendspring.user.dto.LoginRequest;
 import com.sandro.ecommercebackendspring.user.dto.UserDTO;
+import com.sandro.ecommercebackendspring.user.model.PasswordResetToken;
 import com.sandro.ecommercebackendspring.user.model.User;
 import com.sandro.ecommercebackendspring.user.model.UserPrincipal;
+import com.sandro.ecommercebackendspring.user.repository.PasswordResetTokenRepository;
+import com.sandro.ecommercebackendspring.user.repository.UserRepository;
 import com.sandro.ecommercebackendspring.validator.ObjectValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
+@AllArgsConstructor
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
@@ -28,12 +34,15 @@ public class UserService implements UserDetailsService {
 
     private final ObjectValidator objectValidator;
 
-    @Autowired
-    public UserService(UserRepository userRepository, JWTService jwtService, ObjectValidator objectValidator) {
-        this.userRepository = userRepository;
-        this.jwtService = jwtService;
-        this.objectValidator = objectValidator;
-    }
+    public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
+            Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
+
+    private static final String frontendUrl = "http://localhost:3000";
+
+    private SendEmailService sendEmailService;
+
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -119,11 +128,67 @@ public class UserService implements UserDetailsService {
     }
 
 
+    @Transactional
     public Object processForgotPassword(String email) {
+        if (!validateEmail(email)) {
+            return Map.of(
+                    "message", "Invalid email address."
+            );
+        }
+
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            return Map.of(
+                    "message", "If this email is registered, you will receive a password reset link shortly."
+            );
+        }
+
+        deleteTokensByUserId(user.getId());
+
+        String token = generateSecureToken();
+
+        PasswordResetToken passwordResetToken = PasswordResetToken.builder()
+                .token(token)
+                .user(user)
+                .expiryDate(calculateExpiryDate())
+                .build();
+
+        passwordResetTokenRepository.save(passwordResetToken);
+        sendResetLink(email);
 
 
-        return null;
+        return Map.of(
+                "message", "If this email is registered, you will receive a password reset link shortly."
+        );
     }
+
+    private boolean validateEmail(String email) {
+        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(email);
+        return matcher.matches();
+    }
+
+    private String generateSecureToken() {
+        return UUID.randomUUID().toString();
+    }
+
+    private Date calculateExpiryDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR, 1);
+        return calendar.getTime();
+    }
+
+    public void deleteTokensByUserId(Long userId) {
+        passwordResetTokenRepository.deleteByUserId(userId);
+    }
+
+    private String generateResetLink() {
+        return frontendUrl + "/reset-password?token=" + generateSecureToken();
+    }
+
+    public void sendResetLink(String email) {
+        sendEmailService.sendEmail(email, "Password Reset Link", generateResetLink());
+    }
+
 
 
 

@@ -1,4 +1,4 @@
-package com.sandro.ecommercebackendspring.user;
+package com.sandro.ecommercebackendspring.user.repository;
 
 import com.sandro.ecommercebackendspring.user.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;

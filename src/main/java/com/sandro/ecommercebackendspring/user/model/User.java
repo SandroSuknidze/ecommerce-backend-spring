@@ -26,6 +26,7 @@ public class User {
     @Email(message = "Email should be valid")
     @NotEmpty(message = "Email cannot be empty")
     @NotNull(message = "Email is required")
+    @Pattern(regexp = "(?i)^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,6}$", message = "Email should be valid")
     private String email;
 
     @NotEmpty(message = "Password cannot be empty")
