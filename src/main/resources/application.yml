@@ -3,6 +3,9 @@ server:
     include-message: always
     include-binding-errors: always
 
+frontend:
+  url: http://localhost:3000
+
 spring:
   application:
     name: ecommerce-backend-spring

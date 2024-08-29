@@ -11,6 +11,8 @@ import com.sandro.ecommercebackendspring.user.repository.UserRepository;
 import com.sandro.ecommercebackendspring.validator.ObjectValidator;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,7 +25,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
+//Generates a constructor for all final fields and fields that are marked with @NonNull.
+//Ignores non-final fields unless they are marked with @NonNull.
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
@@ -39,9 +43,10 @@ public class UserService implements UserDetailsService {
 
     private final PasswordResetTokenRepository passwordResetTokenRepository;
 
-    private static final String frontendUrl = "http://localhost:3000";
+    @Value("${frontend.url}")
+    private String frontendUrl;
 
-    private SendEmailService sendEmailService;
+    private final SendEmailService sendEmailService;
 
 
     @Override
