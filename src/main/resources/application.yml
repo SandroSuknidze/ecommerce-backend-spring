@@ -41,4 +41,6 @@ spring:
           starttls:
             enable: true
 
-
+logging:
+  file:
+    name: logs.log

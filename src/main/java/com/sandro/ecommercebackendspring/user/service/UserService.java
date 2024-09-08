@@ -3,15 +3,17 @@ package com.sandro.ecommercebackendspring.user.service;
 import com.sandro.ecommercebackendspring.jwt.JWTService;
 import com.sandro.ecommercebackendspring.user.dto.LoginRequest;
 import com.sandro.ecommercebackendspring.user.dto.UserDTO;
+import com.sandro.ecommercebackendspring.user.exceptions.EmailSendingException;
 import com.sandro.ecommercebackendspring.user.model.PasswordResetToken;
 import com.sandro.ecommercebackendspring.user.model.User;
 import com.sandro.ecommercebackendspring.user.model.UserPrincipal;
 import com.sandro.ecommercebackendspring.user.repository.PasswordResetTokenRepository;
 import com.sandro.ecommercebackendspring.user.repository.UserRepository;
 import com.sandro.ecommercebackendspring.validator.ObjectValidator;
+import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,7 +22,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,6 +29,7 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 //Generates a constructor for all final fields and fields that are marked with @NonNull.
 //Ignores non-final fields unless they are marked with @NonNull.
+@Slf4j
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
@@ -96,7 +98,6 @@ public class UserService implements UserDetailsService {
     }
 
     public List<String> validateLogin(LoginRequest loginRequest) {
-        Logger logger = Logger.getLogger(UserService.class.getName());
         List<String> errors = new java.util.ArrayList<>(List.of());
         try {
             User userFromDb = userRepository.findByEmail(loginRequest.getEmail());
@@ -111,7 +112,7 @@ public class UserService implements UserDetailsService {
                 return errors;
             }
         } catch (Exception e) {
-            logger.severe("Cannot set user authentication: " + e.getMessage());
+            log.error("Cannot set user authentication: {}", e.getMessage());
             errors.add("The provided credentials are incorrect.");
             return errors;
         }
@@ -191,7 +192,12 @@ public class UserService implements UserDetailsService {
     }
 
     public void sendResetLink(String email) {
-        sendEmailService.sendEmail(email, "Password Reset Link", generateResetLink());
+        try {
+            sendEmailService.sendEmail(email, "Password Reset Link", generateResetLink());
+        } catch (MessagingException e) {
+            log.error("Failed to send reset link to email: {}", email, e);
+            throw new EmailSendingException("Failed to send password reset link.", e);
+        }
     }
 
 
