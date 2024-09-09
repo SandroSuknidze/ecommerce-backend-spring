@@ -201,6 +201,34 @@ public class UserService implements UserDetailsService {
     }
 
 
+    public Map<String, String> isResetPasswordTokenValid(String token) {
+        PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token);
+
+        if (passwordResetToken == null) {
+            return Map.of(
+                    "message", "Invalid or expired token"
+            );
+        }
+
+        Date expiryDate = passwordResetToken.getExpiryDate();
+        Date now = new Date();
+
+        if (passwordResetToken.getUser() == null || now.after(expiryDate)) {
+            return Map.of(
+                    "message", "Invalid or expired token"
+            );
+        }
+
+        return Map.of();
+    }
+
+    public Map<String, String> processResetPasswordTokenValidation(String token) {
+        PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token);
+        return Map.of(
+                "message", "Token is valid",
+                "email", passwordResetToken.getUser().getEmail()
+        );
+    }
 
 
 }

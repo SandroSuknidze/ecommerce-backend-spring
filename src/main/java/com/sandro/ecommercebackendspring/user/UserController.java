@@ -56,4 +56,18 @@ public class UserController {
 
     }
 
+    @PostMapping("/validate-password-token")
+    public ResponseEntity<?> validatePasswordToken(@RequestBody Map<String, String> request) {
+        String token = request.get("token");
+        Map<String, String> isValid = userService.isResetPasswordTokenValid(token);
+
+        if (!isValid.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(isValid);
+        }
+
+        return ResponseEntity.ok(userService.processResetPasswordTokenValidation(token));
+    }
+
+
 }
