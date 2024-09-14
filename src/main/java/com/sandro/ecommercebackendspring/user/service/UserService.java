@@ -160,7 +160,7 @@ public class UserService implements UserDetailsService {
                 .build();
 
         passwordResetTokenRepository.save(passwordResetToken);
-        sendResetLink(email);
+        sendResetLink(email, token);
 
 
         return Map.of(
@@ -187,13 +187,13 @@ public class UserService implements UserDetailsService {
         passwordResetTokenRepository.deleteByUserId(userId);
     }
 
-    private String generateResetLink() {
-        return frontendUrl + "/reset-password?token=" + generateSecureToken();
+    private String generateResetLink(String token) {
+        return frontendUrl + "/reset-password?token=" + token;
     }
 
-    public void sendResetLink(String email) {
+    public void sendResetLink(String email, String token) {
         try {
-            sendEmailService.sendEmail(email, "Password Reset Link", generateResetLink());
+            sendEmailService.sendEmail(email, "Password Reset Link", generateResetLink(token));
         } catch (MessagingException e) {
             log.error("Failed to send reset link to email: {}", email, e);
             throw new EmailSendingException("Failed to send password reset link.", e);
@@ -227,6 +227,18 @@ public class UserService implements UserDetailsService {
         return Map.of(
                 "message", "Token is valid",
                 "email", passwordResetToken.getUser().getEmail()
+        );
+    }
+
+    @Transactional
+    public Map<String, String> processResetPassword(String token, String password) {
+        User user = passwordResetTokenRepository.findByToken(token).getUser();
+
+        user.setPassword(bCryptPasswordEncoder.encode(password));
+        deleteTokensByUserId(user.getId());
+
+        return Map.of(
+                "message", "Password reset successfully"
         );
     }
 

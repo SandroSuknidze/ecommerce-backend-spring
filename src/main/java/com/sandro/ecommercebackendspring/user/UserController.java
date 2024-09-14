@@ -69,5 +69,20 @@ public class UserController {
         return ResponseEntity.ok(userService.processResetPasswordTokenValidation(token));
     }
 
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> request) {
+        String token = request.get("token");
+        String password = request.get("password");
+
+        Map<String, String> isValid = userService.isResetPasswordTokenValid(token);
+        if (!isValid.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(isValid);
+        }
+
+        return ResponseEntity.ok(userService.processResetPassword(token, password));
+    }
+
+
 
 }
