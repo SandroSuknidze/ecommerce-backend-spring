@@ -188,7 +188,7 @@ public class UserService implements UserDetailsService {
     }
 
     private String generateResetLink(String token) {
-        return frontendUrl + "/reset-password?token=" + token;
+        return frontendUrl + "/account/reset-password?token=" + token;
     }
 
     public void sendResetLink(String email, String token) {
