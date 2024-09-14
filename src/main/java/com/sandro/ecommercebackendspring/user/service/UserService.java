@@ -243,4 +243,28 @@ public class UserService implements UserDetailsService {
     }
 
 
+    public Map<String, Object> validateJwtToken(String token) {
+
+        String email = jwtService.extractEmail(token);
+        if (email == null) {
+            return Map.of("message", "Invalid token");
+        }
+
+        UserDetails userDetails = loadUserByUsername(email);
+        boolean isValid = jwtService.validateToken(token, userDetails);
+
+        if (!isValid) {
+            return Map.of(
+                    "valid", false,
+                    "message", "Invalid token"
+            );
+        }
+
+        User user = userRepository.findByEmail(email);
+
+        return Map.of(
+                "valid", true,
+                "user", user
+        );
+    }
 }

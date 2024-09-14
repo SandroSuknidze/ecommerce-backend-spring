@@ -83,6 +83,24 @@ public class UserController {
         return ResponseEntity.ok(userService.processResetPassword(token, password));
     }
 
+    @GetMapping("/validate-token")
+    public ResponseEntity<?> validateToken(@RequestHeader("Authorization") String token) {
+        // jwt filter handles validity of the token, but it is still here, just in case
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "Token not provided"));
+        }
+
+        Map<String, Object> validationResponse = userService.validateJwtToken(token);
+        if (validationResponse.get("valid").equals(false)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(validationResponse);
+        }
+
+        return ResponseEntity.ok(validationResponse);
+    }
 
 
 }
