@@ -1,7 +1,6 @@
-package com.sandro.ecommercebackendspring.category;
+package com.sandro.ecommercebackendspring.color;
 
 import com.sandro.ecommercebackendspring.product.Product;
-import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,21 +8,21 @@ import lombok.NoArgsConstructor;
 import java.util.Set;
 
 @Entity
-@Table(name = "categories")
+@Table(name = "colors")
 @Data
 @NoArgsConstructor
-public class Category {
+public class Color {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Product> products;
-
     @Column(nullable = false)
     private String name;
 
-    @Column(name = "image_path")
-    private String imagePath;
+    @Column(nullable = false)
+    private String color;
+
+    @ManyToMany(mappedBy = "colors")
+    private Set<Product> products;
 }
