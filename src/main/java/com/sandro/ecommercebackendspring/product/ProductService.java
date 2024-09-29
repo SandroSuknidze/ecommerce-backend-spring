@@ -4,6 +4,7 @@ package com.sandro.ecommercebackendspring.product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -14,5 +15,10 @@ public class ProductService {
 
     public List<Product> getProductsByCategory(Long categoryId) {
         return productRepository.findProductsByCategory(categoryId);
+    }
+
+    public List<Product> getNewArrivalProducts() {
+        LocalDateTime thirtyDaysAgo = LocalDateTime.now().minusDays(30);
+        return productRepository.findProductsArrivedLast30Days(thirtyDaysAgo);
     }
 }

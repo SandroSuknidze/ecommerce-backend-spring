@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
@@ -18,4 +19,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "ORDER BY p.createdAt DESC")
     List<Product> findProductsByCategory(@Param("categoryId") Long categoryId);
 
+    @Query("SELECT p FROM Product p WHERE p.createdAt >= :startDate")
+    List<Product> findProductsArrivedLast30Days(@Param("startDate") LocalDateTime startDate);
 }
