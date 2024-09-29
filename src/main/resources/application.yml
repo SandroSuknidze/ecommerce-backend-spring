@@ -41,6 +41,10 @@ spring:
           starttls:
             enable: true
 
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+
 logging:
   file:
     name: logs.log
