@@ -1,25 +1,30 @@
 package com.sandro.ecommercebackendspring.size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sandro.ecommercebackendspring.product.Product;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Set;
 
+
 @Entity
 @Table(name = "sizes")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class Size {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
 
-    @ManyToMany(mappedBy = "sizes")
+    @JsonIgnore
+    @ManyToMany(mappedBy = "sizes", fetch = FetchType.LAZY)
     private Set<Product> products;
 }

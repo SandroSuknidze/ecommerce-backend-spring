@@ -1,15 +1,19 @@
 package com.sandro.ecommercebackendspring.color;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sandro.ecommercebackendspring.product.Product;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Set;
 
+
 @Entity
 @Table(name = "colors")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class Color {
 
@@ -23,6 +27,7 @@ public class Color {
     @Column(nullable = false)
     private String color;
 
-    @ManyToMany(mappedBy = "colors")
+    @JsonIgnore
+    @ManyToMany(mappedBy = "colors", fetch = FetchType.LAZY)
     private Set<Product> products;
 }

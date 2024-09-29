@@ -18,12 +18,11 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private Set<Product> products;
 
     @Column(nullable = false)
     private String name;
 
-    @Column(name = "image_path")
     private String imagePath;
 }
