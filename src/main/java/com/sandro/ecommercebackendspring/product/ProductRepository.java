@@ -21,4 +21,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT p FROM Product p WHERE p.createdAt >= :startDate")
     List<Product> findProductsArrivedLast30Days(@Param("startDate") LocalDateTime startDate);
+
+    @Query("SELECT p FROM Product p Where p.isFeatured = true")
+    List<Product> findProductsFeatured();
 }

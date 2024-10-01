@@ -21,4 +21,8 @@ public class ProductService {
         LocalDateTime thirtyDaysAgo = LocalDateTime.now().minusDays(30);
         return productRepository.findProductsArrivedLast30Days(thirtyDaysAgo);
     }
+
+    public List<Product> getAllFeaturedProducts() {
+        return productRepository.findProductsFeatured();
+    }
 }

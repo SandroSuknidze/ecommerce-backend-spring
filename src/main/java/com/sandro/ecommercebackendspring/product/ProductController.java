@@ -30,4 +30,9 @@ public class ProductController {
     public List<Product> getNewArrivals() {
         return productService.getNewArrivalProducts();
     }
+
+    @GetMapping("/products/featured")
+    public List<Product> getFeaturedProducts() {
+        return productService.getAllFeaturedProducts();
+    }
 }
