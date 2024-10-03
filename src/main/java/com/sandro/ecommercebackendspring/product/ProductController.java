@@ -35,4 +35,25 @@ public class ProductController {
     public List<Product> getFeaturedProducts() {
         return productService.getAllFeaturedProducts();
     }
+
+    @GetMapping("/products/sale")
+    public List<Product> getSaleProducts() {
+        return productService.getAllSaleProducts();
+    }
+
+    @GetMapping("/products/random")
+    public List<Product> getRandomProducts() {
+        return productService.getRandomProducts();
+    }
+
+    @GetMapping("/products/{categoryId}")
+    public ResponseEntity<List<Product>> getProductById(
+            @RequestParam(required = false) String brands,
+            @RequestParam(required = false) String colors,
+            @RequestParam(required = false) String sizes,
+            @RequestParam(required = false) String price,
+            @PathVariable Long categoryId) {
+        List<Product> products = productService.getFilteredProducts(categoryId, brands, colors, sizes, price);
+        return ResponseEntity.ok(products);
+    }
 }

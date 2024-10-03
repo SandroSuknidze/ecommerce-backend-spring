@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -36,9 +37,9 @@ public class Product {
     private List<String> imagePath;
 
     @Column(nullable = false)
-    private float price;
+    private BigDecimal price;
 
-    private Float salePrice;
+    private BigDecimal salePrice;
 
     private Float rating;
 
