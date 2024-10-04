@@ -8,6 +8,7 @@ import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -84,17 +85,26 @@ public class ProductService {
             if (price != null && !price.isEmpty()) {
                 String[] prices = price.split(",");
                 if (prices.length == 2) {
-                    float minPrice = Float.parseFloat(prices[0]);
-                    float maxPrice = Float.parseFloat(prices[1]);
+                    BigDecimal minPrice = BigDecimal.valueOf(Long.parseLong(prices[0]));
+                    BigDecimal maxPrice = BigDecimal.valueOf(Long.parseLong(prices[1]));
 
                     Predicate pricePredicate = criteriaBuilder.or(
-                            criteriaBuilder.between(root.get("price"), minPrice, maxPrice),
-                            criteriaBuilder.between(root.get("salePrice"), minPrice, maxPrice)
+                            criteriaBuilder.and(
+                                    criteriaBuilder.isNotNull(root.get("salePrice")),
+                                    criteriaBuilder.between(root.get("salePrice"), minPrice, maxPrice)
+                            ),
+                            criteriaBuilder.and(
+                                    criteriaBuilder.isNull(root.get("salePrice")),
+                                    criteriaBuilder.between(root.get("price"), minPrice, maxPrice)
+                            )
                     );
                     predicates.add(pricePredicate);
                 }
             }
 
+            if (query == null) {
+                throw new IllegalArgumentException("Query cannot be null");
+            }
             query.orderBy(criteriaBuilder.desc(root.get("createdAt")));
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
