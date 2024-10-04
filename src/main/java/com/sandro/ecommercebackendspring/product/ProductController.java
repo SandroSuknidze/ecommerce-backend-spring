@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -56,4 +57,37 @@ public class ProductController {
         List<Product> products = productService.getFilteredProducts(categoryId, brands, colors, sizes, price);
         return ResponseEntity.ok(products);
     }
+
+    // It should've been products, and it should be a Get method
+    @PostMapping("/product/search")
+    public ResponseEntity<Object> getProductsByName(@RequestParam String q) {
+        if (q.length() < 3) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    Map.of("error", "Query string must be at least 3 characters long")
+            );
+        }
+
+        List<Product> products = productService.getSearchedProducts(q);
+
+        if (products.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    Map.of("error", "Product not found")
+            );
+        }
+
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/product/{id}")
+    public ResponseEntity<Object> getProductById(@PathVariable Long id) {
+        Product product = productService.getProduct(id);
+        if(product == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    Map.of("error", "Product not found")
+            );
+        }
+        return ResponseEntity.ok(product);
+    }
+
+
 }

@@ -111,4 +111,15 @@ public class ProductService {
         });
     }
 
+    public List<Product> getSearchedProducts(String q) {
+        return productRepository.findProductsByTitleContaining(q);
+    }
+
+    public Product getProduct(Long id) {
+        return productRepository.findProductByIdAndStockQuantityGreaterThan(id,0);
+    }
+
+
+
+
 }

@@ -29,4 +29,8 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
 
     @Query(value = "SELECT * FROM products ORDER BY RAND() LIMIT :count", nativeQuery = true)
     List<Product> findRandomProducts(@Param("count") int count);
+
+    List<Product> findProductsByTitleContaining(String q);
+
+    Product findProductByIdAndStockQuantityGreaterThan(Long id, int stockQuantity);
 }
