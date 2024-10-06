@@ -17,7 +17,7 @@ public class AskedQuestionDTO {
 
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid email format")
-    @Size(max = 300, message = "Email length must be between 4 and 300")
+    @Size(max = 300, message = "Email length should not exceed 300 characters")
     private String email;
 
     @NotBlank(message = "Phone is required")

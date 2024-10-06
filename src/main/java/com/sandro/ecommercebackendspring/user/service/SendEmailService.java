@@ -34,6 +34,21 @@ public class SendEmailService {
         javaMailSender.send(mimeMessage);
     }
 
+    @Async
+    public void sendSubscribeEmail(String to, String subject) throws MessagingException {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+
+        helper.setFrom("Umino <" + from + ">");
+        helper.setTo(to);
+        helper.setSubject(subject);
+
+        String body = buildThankYouEmail();
+
+        helper.setText(body, true);
+        javaMailSender.send(mimeMessage);
+    }
+
     public String buildEmailBody(String resetLink) {
         return "<html>" +
                 "<body style='font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px;'>" +
@@ -49,6 +64,29 @@ public class SendEmailService {
                 "</div>" +
                 "<footer style='text-align: center; margin-top: 20px;'>" +
                 "</footer>" +
+                "</body>" +
+                "</html>";
+    }
+
+    public String buildThankYouEmail() {
+        return "<!DOCTYPE html>" +
+                "<html lang=\"en\">" +
+                "<head>" +
+                "<meta charset=\"UTF-8\">" +
+                "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" +
+                "<title>Thank You for Subscribing!</title>" +
+                "<style>" +
+                "body { font-family: Arial, sans-serif; background-color: #f0f0f0; text-align: center; padding: 50px; }" +
+                ".container { max-width: 600px; margin: 0 auto; background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }" +
+                "h1 { color: #333; margin-bottom: 20px; }" +
+                "p { color: #666; font-size: 18px; line-height: 1.6; }" +
+                "</style>" +
+                "</head>" +
+                "<body>" +
+                "<div class=\"container\">" +
+                "<h1>Thank You for Subscribing!</h1>" +
+                "<p>We appreciate you joining our newsletter. You'll now receive updates and exclusive offers straight to your inbox.</p>" +
+                "</div>" +
                 "</body>" +
                 "</html>";
     }

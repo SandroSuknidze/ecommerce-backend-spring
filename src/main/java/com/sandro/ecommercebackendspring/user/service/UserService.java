@@ -3,7 +3,7 @@ package com.sandro.ecommercebackendspring.user.service;
 import com.sandro.ecommercebackendspring.jwt.JWTService;
 import com.sandro.ecommercebackendspring.user.dto.LoginRequest;
 import com.sandro.ecommercebackendspring.user.dto.UserDTO;
-import com.sandro.ecommercebackendspring.user.exceptions.EmailSendingException;
+import com.sandro.ecommercebackendspring.exceptions.EmailSendingException;
 import com.sandro.ecommercebackendspring.user.model.PasswordResetToken;
 import com.sandro.ecommercebackendspring.user.model.User;
 import com.sandro.ecommercebackendspring.user.model.UserPrincipal;
