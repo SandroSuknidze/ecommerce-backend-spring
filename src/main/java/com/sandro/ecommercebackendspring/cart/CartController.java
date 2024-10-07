@@ -1,5 +1,7 @@
 package com.sandro.ecommercebackendspring.cart;
 
+import com.sandro.ecommercebackendspring.cart.dto.AddToCartDTO;
+import com.sandro.ecommercebackendspring.cart.dto.RemoveFromCartDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +25,16 @@ public class CartController {
         try {
             cartService.addToCart(request);
             return ResponseEntity.ok(Map.of("message", "Product added to cart successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/cart/remove")
+    public ResponseEntity<?> removeFromCart(@Valid @RequestBody RemoveFromCartDTO request){
+        try {
+            cartService.removeFromCart(request);
+            return ResponseEntity.ok(Map.of("message", "Item removed successfully"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }

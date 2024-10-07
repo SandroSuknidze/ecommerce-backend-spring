@@ -1,5 +1,7 @@
 package com.sandro.ecommercebackendspring.cart;
 
+import com.sandro.ecommercebackendspring.cart.dto.AddToCartDTO;
+import com.sandro.ecommercebackendspring.cart.dto.RemoveFromCartDTO;
 import com.sandro.ecommercebackendspring.color.Color;
 import com.sandro.ecommercebackendspring.color.ColorRepository;
 import com.sandro.ecommercebackendspring.product.Product;
@@ -63,6 +65,19 @@ public class CartService {
 
             cartRepository.save(cart);
         }
+    }
+
+    public void removeFromCart(RemoveFromCartDTO request) {
+        Product product = productRepository.findById(request.getId())
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        User user = getCurrentUser();
+
+        Optional<Cart> existingCart = cartRepository.findByUserAndProductAndSizeIdAndColorId(
+                user, product, request.getSizeId(), request.getColorId()
+        );
+
+        existingCart.ifPresent(cartRepository::delete);
     }
 
     private User getCurrentUser() {

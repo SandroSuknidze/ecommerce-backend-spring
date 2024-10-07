@@ -1,4 +1,4 @@
-package com.sandro.ecommercebackendspring.cart;
+package com.sandro.ecommercebackendspring.cart.dto;
 
 import lombok.Getter;
 import lombok.ToString;
