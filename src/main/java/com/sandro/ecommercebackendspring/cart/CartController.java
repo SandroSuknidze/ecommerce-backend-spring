@@ -2,6 +2,7 @@ package com.sandro.ecommercebackendspring.cart;
 
 import com.sandro.ecommercebackendspring.cart.dto.AddToCartDTO;
 import com.sandro.ecommercebackendspring.cart.dto.RemoveFromCartDTO;
+import com.sandro.ecommercebackendspring.cart.dto.SyncCartDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,6 +56,16 @@ public class CartController {
         try {
             cartService.clearCartForUser();
             return ResponseEntity.ok(Map.of("message", "Cart cleared successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/cart/sync")
+    public ResponseEntity<?> syncCart(@Valid @RequestBody SyncCartDTO request) {
+        try {
+            cartService.syncCartForUser(request);
+            return ResponseEntity.ok(Map.of("message", "Cart synchronized"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }

@@ -2,6 +2,7 @@ package com.sandro.ecommercebackendspring.cart;
 
 import com.sandro.ecommercebackendspring.cart.dto.AddToCartDTO;
 import com.sandro.ecommercebackendspring.cart.dto.RemoveFromCartDTO;
+import com.sandro.ecommercebackendspring.cart.dto.SyncCartDTO;
 import com.sandro.ecommercebackendspring.color.Color;
 import com.sandro.ecommercebackendspring.color.ColorRepository;
 import com.sandro.ecommercebackendspring.product.Product;
@@ -104,6 +105,39 @@ public class CartService {
     public void clearCartForUser() {
         User user = getCurrentUser();
         cartRepository.deleteByUserId(user.getId());
+    }
+
+    public void syncCartForUser(SyncCartDTO request) {
+        User user = getCurrentUser();
+
+        for (AddToCartDTO cartItem : request.getCart()) {
+            Product product = productRepository.findById(cartItem.getId())
+                    .orElseThrow(() -> new RuntimeException("Product not found"));
+
+            Size size = cartItem.getSizeId() != null ? sizeRepository.findById(cartItem.getSizeId())
+                    .orElse(null) : null;
+
+            Color color = cartItem.getColorId() != null ? colorRepository.findById(cartItem.getColorId())
+                    .orElse(null) : null;
+
+            Optional<Cart> existingCart = cartRepository.findByUserAndProductAndSizeAndColor(
+                    user, product, size, color
+            );
+
+            if (existingCart.isPresent()) {
+                Cart cart = existingCart.get();
+                cart.setQuantity(cart.getQuantity() + cartItem.getQuantity());
+                cartRepository.save(cart);
+            } else {
+                Cart newCart = new Cart();
+                newCart.setUser(user);
+                newCart.setProduct(product);
+                newCart.setQuantity(cartItem.getQuantity());
+                newCart.setSize(size);
+                newCart.setColor(color);
+                cartRepository.save(newCart);
+            }
+        }
     }
 
     private User getCurrentUser() {
