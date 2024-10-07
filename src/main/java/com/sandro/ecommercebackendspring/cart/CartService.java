@@ -1,6 +1,7 @@
 package com.sandro.ecommercebackendspring.cart;
 
 import com.sandro.ecommercebackendspring.cart.dto.AddToCartDTO;
+import com.sandro.ecommercebackendspring.cart.dto.CartResponse;
 import com.sandro.ecommercebackendspring.cart.dto.RemoveFromCartDTO;
 import com.sandro.ecommercebackendspring.cart.dto.SyncCartDTO;
 import com.sandro.ecommercebackendspring.color.Color;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -141,10 +143,26 @@ public class CartService {
         }
     }
 
-    public List<Cart> getCartForUser() {
+    public List<CartResponse> getCartForUser() {
         User user = getCurrentUser();
-        return cartRepository.findByUser(user);
+        List<Cart> cartItems = cartRepository.findByUser(user);
+
+        return cartItems.stream().map(cart -> {
+            CartResponse response = new CartResponse();
+            response.setId(cart.getId());
+            response.setUserId(cart.getUser().getId());
+            response.setProductId(cart.getProduct().getId());
+            response.setSizeId(cart.getSize().getId());
+            response.setColorId(cart.getColor().getId());
+            response.setQuantity(cart.getQuantity());
+            response.setProduct(cart.getProduct());
+            response.setColor(cart.getColor());
+            response.setSize(cart.getSize());
+
+            return response;
+        }).collect(Collectors.toList());
     }
+
 
     private User getCurrentUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();

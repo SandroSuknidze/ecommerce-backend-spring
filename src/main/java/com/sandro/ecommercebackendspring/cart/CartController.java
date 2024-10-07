@@ -1,6 +1,7 @@
 package com.sandro.ecommercebackendspring.cart;
 
 import com.sandro.ecommercebackendspring.cart.dto.AddToCartDTO;
+import com.sandro.ecommercebackendspring.cart.dto.CartResponse;
 import com.sandro.ecommercebackendspring.cart.dto.RemoveFromCartDTO;
 import com.sandro.ecommercebackendspring.cart.dto.SyncCartDTO;
 import jakarta.validation.Valid;
@@ -73,8 +74,8 @@ public class CartController {
     }
 
     @GetMapping("/cart")
-    public ResponseEntity<List<Cart>> getCartForUser() {
-        List<Cart> cart = cartService.getCartForUser();
+    public ResponseEntity<List<CartResponse>> getCartForUser() {
+        List<CartResponse> cart = cartService.getCartForUser();
         return ResponseEntity.ok(cart);
     }
 }
