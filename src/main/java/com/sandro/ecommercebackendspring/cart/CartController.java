@@ -49,4 +49,14 @@ public class CartController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
+    @PostMapping("/cart/clear")
+    public ResponseEntity<?> clearCart() {
+        try {
+            cartService.clearCartForUser();
+            return ResponseEntity.ok(Map.of("message", "Cart cleared successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 }

@@ -10,6 +10,7 @@ import com.sandro.ecommercebackendspring.size.Size;
 import com.sandro.ecommercebackendspring.size.SizeRepository;
 import com.sandro.ecommercebackendspring.user.model.User;
 import com.sandro.ecommercebackendspring.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -97,6 +98,12 @@ public class CartService {
         } else {
             throw new RuntimeException("Cart not found");
         }
+    }
+
+    @Transactional
+    public void clearCartForUser() {
+        User user = getCurrentUser();
+        cartRepository.deleteByUserId(user.getId());
     }
 
     private User getCurrentUser() {
