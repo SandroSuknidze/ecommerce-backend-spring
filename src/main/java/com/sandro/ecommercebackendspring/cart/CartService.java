@@ -80,6 +80,25 @@ public class CartService {
         existingCart.ifPresent(cartRepository::delete);
     }
 
+    // DTO here is the same
+    public void updateQuantity(AddToCartDTO request) {
+        Product product = productRepository.findById(request.getId())
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        User user = getCurrentUser();
+
+        Optional<Cart> existingCart = cartRepository.findByUserAndProductAndSizeIdAndColorId(
+                user, product, request.getSizeId(), request.getColorId());
+
+        if (existingCart.isPresent()) {
+            Cart cart = existingCart.get();
+            cart.setQuantity(request.getQuantity());
+            cartRepository.save(cart);
+        } else {
+            throw new RuntimeException("Cart not found");
+        }
+    }
+
     private User getCurrentUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email);

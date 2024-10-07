@@ -31,10 +31,20 @@ public class CartController {
     }
 
     @PostMapping("/cart/remove")
-    public ResponseEntity<?> removeFromCart(@Valid @RequestBody RemoveFromCartDTO request){
+    public ResponseEntity<?> removeFromCart(@Valid @RequestBody RemoveFromCartDTO request) {
         try {
             cartService.removeFromCart(request);
             return ResponseEntity.ok(Map.of("message", "Item removed successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/cart/update-quantity")
+    public ResponseEntity<?> updateQuantityCart(@Valid @RequestBody AddToCartDTO request) {
+        try {
+            cartService.updateQuantity(request);
+            return ResponseEntity.ok(Map.of("message", "Quantity updated"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
