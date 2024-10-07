@@ -2,6 +2,7 @@ package com.sandro.ecommercebackendspring.color;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sandro.ecommercebackendspring.product.Product;
+import com.sandro.ecommercebackendspring.wishlist.Wishlist;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,4 +31,8 @@ public class Color {
     @JsonIgnore
     @ManyToMany(mappedBy = "colors", fetch = FetchType.LAZY)
     private Set<Product> products;
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "colors", fetch = FetchType.LAZY)
+    private Set<Wishlist> wishlists;
 }

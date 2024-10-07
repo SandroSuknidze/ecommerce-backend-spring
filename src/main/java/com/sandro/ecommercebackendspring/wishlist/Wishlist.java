@@ -1,4 +1,4 @@
-package com.sandro.ecommercebackendspring.cart;
+package com.sandro.ecommercebackendspring.wishlist;
 
 import com.sandro.ecommercebackendspring.color.Color;
 import com.sandro.ecommercebackendspring.product.Product;
@@ -10,12 +10,13 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "carts")
-public class Cart {
+@Table(name = "wishlists")
+public class Wishlist {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,8 +30,6 @@ public class Cart {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    private int quantity;
-
     @ManyToOne
     @JoinColumn(name = "size_id")
     private Size size;
@@ -38,6 +37,14 @@ public class Cart {
     @ManyToOne
     @JoinColumn(name = "color_id")
     private Color color;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "wishlist_colors",
+            joinColumns = @JoinColumn(name = "wishlist_id"),
+            inverseJoinColumns = @JoinColumn(name = "color_id")
+    )
+    private Set<Color> colors;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
