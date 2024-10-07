@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -138,6 +139,11 @@ public class CartService {
                 cartRepository.save(newCart);
             }
         }
+    }
+
+    public List<Cart> getCartForUser() {
+        User user = getCurrentUser();
+        return cartRepository.findByUser(user);
     }
 
     private User getCurrentUser() {
