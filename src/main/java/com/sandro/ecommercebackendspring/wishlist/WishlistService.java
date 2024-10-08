@@ -2,6 +2,7 @@ package com.sandro.ecommercebackendspring.wishlist;
 
 import com.sandro.ecommercebackendspring.cart.Cart;
 import com.sandro.ecommercebackendspring.cart.dto.AddToCartDTO;
+import com.sandro.ecommercebackendspring.cart.dto.CartResponse;
 import com.sandro.ecommercebackendspring.color.Color;
 import com.sandro.ecommercebackendspring.color.ColorRepository;
 import com.sandro.ecommercebackendspring.product.Product;
@@ -13,6 +14,7 @@ import com.sandro.ecommercebackendspring.user.repository.UserRepository;
 import com.sandro.ecommercebackendspring.wishlist.dto.AddToWishlistDTO;
 import com.sandro.ecommercebackendspring.wishlist.dto.SyncToWishlistDTO;
 import com.sandro.ecommercebackendspring.wishlist.dto.SyncWishlistDTO;
+import com.sandro.ecommercebackendspring.wishlist.dto.WishlistResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -114,6 +116,26 @@ public class WishlistService {
 
             wishlistRepository.save(userWishlistItem);
         }
+    }
+
+    public List<WishlistResponse> getWishlistForUser() {
+        User user = getCurrentUser();
+        List<Wishlist> wishlistItems = wishlistRepository.findByUser(user);
+
+        return wishlistItems.stream().map(cart -> {
+            WishlistResponse response = new WishlistResponse();
+            response.setId(cart.getId());
+            response.setUserId(cart.getUser().getId());
+            response.setProductId(cart.getProduct().getId());
+            response.setSizeId(cart.getSize().getId());
+            response.setColorId(cart.getColor().getId());
+//            response.setQuantity(cart.getQuantity());
+            response.setProduct(cart.getProduct());
+            response.setColor(cart.getColor());
+            response.setSize(cart.getSize());
+
+            return response;
+        }).collect(Collectors.toList());
     }
 
     private User getCurrentUser() {

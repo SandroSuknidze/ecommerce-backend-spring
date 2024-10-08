@@ -1,8 +1,10 @@
 package com.sandro.ecommercebackendspring.wishlist;
 
+import com.sandro.ecommercebackendspring.cart.dto.CartResponse;
 import com.sandro.ecommercebackendspring.wishlist.dto.AddToWishlistDTO;
 import com.sandro.ecommercebackendspring.wishlist.dto.SyncToWishlistDTO;
 import com.sandro.ecommercebackendspring.wishlist.dto.SyncWishlistDTO;
+import com.sandro.ecommercebackendspring.wishlist.dto.WishlistResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -50,5 +53,11 @@ public class WishlistController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+    }
+
+    @GetMapping("/wishlist")
+    public ResponseEntity<List<WishlistResponse>> getAllWishlist() {
+        List<WishlistResponse> wishlist = wishlistService.getWishlistForUser();
+        return ResponseEntity.ok(wishlist);
     }
 }

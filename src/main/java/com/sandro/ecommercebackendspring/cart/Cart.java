@@ -39,7 +39,8 @@ public class Cart {
     @JoinColumn(name = "color_id")
     private Color color;
 
-    @CreationTimestamp
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    // For later
+//    @CreationTimestamp
+//    @Column(nullable = false, updatable = false)
+//    private LocalDateTime createdAt;
 }
