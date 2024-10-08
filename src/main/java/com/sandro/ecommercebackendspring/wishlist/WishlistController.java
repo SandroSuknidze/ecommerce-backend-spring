@@ -1,5 +1,8 @@
 package com.sandro.ecommercebackendspring.wishlist;
 
+import com.sandro.ecommercebackendspring.wishlist.dto.AddToWishlistDTO;
+import com.sandro.ecommercebackendspring.wishlist.dto.SyncToWishlistDTO;
+import com.sandro.ecommercebackendspring.wishlist.dto.SyncWishlistDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +37,16 @@ public class WishlistController {
             Long productId = Long.parseLong(request.get("id"));
             wishlistService.removeWishlistItem(productId);
             return ResponseEntity.ok(Map.of("message", "Item removed successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/wishlist/sync")
+    public ResponseEntity<?> syncWishlist(@Valid @RequestBody SyncWishlistDTO request) {
+        try {
+            wishlistService.syncWishlistForUser(request);
+            return ResponseEntity.ok(Map.of("message", "Wishlist synchronized"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }

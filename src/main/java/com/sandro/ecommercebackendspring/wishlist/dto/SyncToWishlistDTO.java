@@ -1,4 +1,4 @@
-package com.sandro.ecommercebackendspring.wishlist;
+package com.sandro.ecommercebackendspring.wishlist.dto;
 
 import com.sandro.ecommercebackendspring.color.Color;
 import lombok.Getter;
@@ -8,7 +8,7 @@ import java.util.Set;
 
 @Getter
 @ToString
-public class AddToWishlistDTO {
+public class SyncToWishlistDTO {
 
     // This is a productId
     private Long id;
