@@ -58,6 +58,14 @@ public class WishlistService {
         wishlistRepository.save(wishlist);
     }
 
+    public void removeWishlistItem(Long productId) {
+        User user = getCurrentUser();
+        Wishlist wishlist = wishlistRepository.findByUserAndProductId(user, productId)
+                .orElseThrow(() -> new RuntimeException("Wishlist item not found"));
+
+        wishlistRepository.delete(wishlist);
+    }
+
     private User getCurrentUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email);
