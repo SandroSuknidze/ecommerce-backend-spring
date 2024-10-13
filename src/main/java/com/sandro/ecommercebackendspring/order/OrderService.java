@@ -54,8 +54,9 @@ public class OrderService {
                 order.setZipCode(orderRequest.getData().getZipCode());
                 orderRepository.save(order);
 
-                product.setStockQuantity(product.getStockQuantity() - cartItem.getQuantity());
-                productRepository.save(product);
+//                It would be set for a real production
+//                product.setStockQuantity(product.getStockQuantity() - cartItem.getQuantity());
+//                productRepository.save(product);
 
                 cartRepository.deleteByUserId(user.getId());
             } else {

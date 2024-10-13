@@ -27,7 +27,9 @@ public class ProductService {
 
     public List<Product> getNewArrivalProducts() {
         LocalDateTime thirtyDaysAgo = LocalDateTime.now().minusDays(30);
-        return productRepository.findProductsArrivedLast30Days(thirtyDaysAgo);
+//        This is for a production
+//        return productRepository.findProductsArrivedLast30Days(thirtyDaysAgo);
+        return productRepository.findRandomProducts(6);
     }
 
     public List<Product> getAllFeaturedProducts() {
