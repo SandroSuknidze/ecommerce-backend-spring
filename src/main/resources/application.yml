@@ -4,7 +4,8 @@ server:
     include-binding-errors: always
 
 frontend:
-  url: http://localhost:3000
+  url: https://ecommerce-frontend-kappa-ten.vercel.app
+#  url: http://localhost:3000
 
 spring:
   application:
