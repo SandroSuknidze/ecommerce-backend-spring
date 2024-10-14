@@ -25,4 +25,9 @@ public class Category {
     private String name;
 
     private String imagePath;
+
+    public Category(String name, String imagePath) {
+        this.name = name;
+        this.imagePath = imagePath;
+    }
 }

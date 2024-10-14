@@ -2,6 +2,7 @@ package com.sandro.ecommercebackendspring.policy.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "cookie_policies")
+@NoArgsConstructor
 public class CookiePolicy {
 
     @Id
@@ -23,4 +25,8 @@ public class CookiePolicy {
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    public CookiePolicy(String text) {
+        this.text = text;
+    }
 }

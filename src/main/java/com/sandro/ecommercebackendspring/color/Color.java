@@ -35,4 +35,9 @@ public class Color {
     @JsonIgnore
     @ManyToMany(mappedBy = "colors", fetch = FetchType.LAZY)
     private Set<Wishlist> wishlists;
+
+    public Color(String name, String color) {
+        this.name = name;
+        this.color = color;
+    }
 }

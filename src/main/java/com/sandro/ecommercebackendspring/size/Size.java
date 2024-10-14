@@ -27,4 +27,8 @@ public class Size {
     @JsonIgnore
     @ManyToMany(mappedBy = "sizes", fetch = FetchType.LAZY)
     private Set<Product> products;
+
+    public Size(String name) {
+        this.name = name;
+    }
 }

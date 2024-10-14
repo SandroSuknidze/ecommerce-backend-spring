@@ -2,6 +2,7 @@ package com.sandro.ecommercebackendspring.policy.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "shipping_returns")
+@NoArgsConstructor
 public class ShippingReturn {
 
     @Id
@@ -23,4 +25,8 @@ public class ShippingReturn {
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    public ShippingReturn(String text) {
+        this.text = text;
+    }
 }

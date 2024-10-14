@@ -24,7 +24,7 @@ public class CategoryService {
             categoryData.put("id", result[0]);
             categoryData.put("name", result[1]);
             categoryData.put("image_path", result[2]);
-            categoryData.put("product_count", result[3]);
+            categoryData.put("products_count", result[3]);
 
             categoriesWithProductCount.add(categoryData);
         }
