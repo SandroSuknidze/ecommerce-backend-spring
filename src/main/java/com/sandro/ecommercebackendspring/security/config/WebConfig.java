@@ -11,7 +11,8 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000", "https://ecommerce-frontend-kappa-ten.vercel.app")
+//                .allowedOrigins("http://localhost:3000", "https://ecommerce-frontend-kappa-ten.vercel.app")
+                .allowedOrigins("https://umino.me")
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowCredentials(true);
     }
