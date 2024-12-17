@@ -4,7 +4,7 @@ server:
     include-binding-errors: always
 
 frontend:
-  url: https://ecommerce-frontend-kappa-ten.vercel.app
+  url: https://umino.me
 #  url: http://localhost:3000
 
 spring:
