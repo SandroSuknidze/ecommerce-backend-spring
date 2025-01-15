@@ -36,9 +36,3 @@ This repository contains the backend implementation of an e-commerce platform bu
 3. Run the application:
    ```bash
    mvn spring-boot:run
-
-
-## Environment Variables
-Create a ```.env``` file and configure the following variables:
-```bash
-NEXT_PUBLIC_API_URL=http://localhost:8080/api
